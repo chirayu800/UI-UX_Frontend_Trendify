@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { assets } from '../assets/assets';
 import RelatedProducts from '../components/RelatedProducts';
 import { getProductByIDApi, addToCartApi } from '../api/api';
+import { ShopContext } from '../context/ShopContext';
 
 const Product = () => {
   const { productId } = useParams();
+  const { toggleFavorite, isFavorite } = useContext(ShopContext);
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [loading, setLoading] = useState(false);
+  const [favorite, setFavorite] = useState(false);
 
   const fetchProductData = async () => {
     try {
@@ -29,6 +32,12 @@ const Product = () => {
   useEffect(() => {
     fetchProductData();
   }, [productId]);
+
+  useEffect(() => {
+    if (product) {
+      setFavorite(isFavorite(product._id));
+    }
+  }, [product, isFavorite]);
 
   const handleAddToCart = async () => {
     if (!selectedSize) {
@@ -93,11 +102,37 @@ const Product = () => {
 
         {/* Product Info */}
         <div className='flex-1'>
-          <h1 className='mt-2 text-2xl font-medium'>{product.name}</h1>
+          <div className='flex items-center justify-between'>
+            <h1 className='mt-2 text-2xl font-medium'>{product.name}</h1>
+            <button
+              onClick={() => {
+                toggleFavorite(product);
+                setFavorite(!favorite);
+              }}
+              className='p-2 hover:bg-gray-100 rounded-full transition-all duration-300'
+              aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
+            >
+              <svg
+                className={`w-6 h-6 transition-all duration-300 ${
+                  favorite ? "text-red-500 fill-red-500" : "text-gray-600"
+                }`}
+                fill={favorite ? "currentColor" : "none"}
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+            </button>
+          </div>
 
           {/* Rating stars if you want */}
 
-          <p className='mt-5 text-3xl font-medium'>${product.price}</p>
+          <p className='mt-5 text-3xl font-medium'>Rs {product.price.toLocaleString('en-NP', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
           <p className='mt-5 text-gray-500 md:w-4/5'>{product.description}</p>
 
           <div className='flex flex-col gap-4 my-8'>
@@ -131,25 +166,6 @@ const Product = () => {
             <p>Enjoy Cash on Delivery – Pay at Your Doorstep!</p>
             <p>Hassle-Free Returns & Exchanges – 10 Days, No Questions Asked!</p>
           </div>
-        </div>
-      </div>
-
-      {/* Description / Reviews */}
-      <div className='mt-20'>
-        <div className='flex'>
-          <b className='px-5 py-3 text-sm border'>Description</b>
-          <p className='px-5 py-3 text-sm border'>Reviews (122)</p>
-        </div>
-        <div className='flex flex-col gap-4 px-6 py-6 text-sm text-gray-500 border'>
-          <p>
-            Elevate your style with our meticulously crafted Trendify quality products.
-            Designed with a perfect balance of elegance and practicality.
-          </p>
-          <p>
-            Whether you're dressing up for a special occasion or adding a touch of
-            sophistication to your everyday look, the Trendify products offer
-            unparalleled versatility.
-          </p>
         </div>
       </div>
 

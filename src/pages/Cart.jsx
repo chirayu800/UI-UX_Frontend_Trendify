@@ -93,7 +93,7 @@ const Cart = () => {
                 <img className='w-20 h-20 object-cover rounded' src={product.image[0]} alt={product.name} />
                 <div className='text-gray-800'>
                   <p className='text-base font-medium'>{product.name}</p>
-                  <p className='text-sm mt-1 text-gray-500'>₹ {product.price.toFixed(2)} x {quantity}</p>
+                  <p className='text-sm mt-1 text-gray-500'>Rs {product.price.toLocaleString('en-NP', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} x {quantity}</p>
                 </div>
               </div>
 
@@ -148,7 +148,7 @@ const Cart = () => {
           <h2 className='text-lg font-semibold mb-4 text-gray-700'>Order Summary</h2>
           <div className='flex justify-between mb-2'>
             <p className='text-sm text-gray-600'>Subtotal</p>
-            <p className='font-medium'>₹ {cartTotal.toFixed(2)}</p>
+            <p className='font-medium'>Rs {cartTotal.toLocaleString('en-NP', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
           </div>
           <div className='flex justify-between mb-4'>
             <p className='text-sm text-gray-600'>Shipping</p>
@@ -157,7 +157,7 @@ const Cart = () => {
           <hr className='my-2' />
           <div className='flex justify-between font-semibold text-gray-800 text-lg'>
             <p>Total</p>
-            <p>₹ {cartTotal.toFixed(2)}</p>
+            <p>Rs {cartTotal.toLocaleString('en-NP', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
           </div>
           <button
             onClick={() => navigate('/place-order')}

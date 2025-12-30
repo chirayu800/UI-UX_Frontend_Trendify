@@ -6,13 +6,13 @@ import { getAllCartItems } from '../api/api';
 
 const NavBar = () => {
     const [visible, setVisible] = useState(false);
-    const { setShowSearch } = useContext(ShopContext);
+    const { setShowSearch, favorites } = useContext(ShopContext);
     const [cartLength, setCartLength] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
         cartItems();
-    },[])
+    }, []);
 
     const cartItems = async () => {
         try {
@@ -72,6 +72,26 @@ const NavBar = () => {
                     className='w-5 cursor-pointer'
                     alt="Search Products"
                 />
+                <Link to='/favorites' className='relative'>
+                    <svg 
+                        className='w-5 h-5 cursor-pointer text-gray-700 hover:text-red-500 transition-colors' 
+                        fill='none' 
+                        stroke='currentColor' 
+                        viewBox='0 0 24 24'
+                    >
+                        <path 
+                            strokeLinecap='round' 
+                            strokeLinejoin='round' 
+                            strokeWidth={2} 
+                            d='M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' 
+                        />
+                    </svg>
+                    {favorites && favorites.length > 0 && (
+                        <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-red-500 text-white aspect-square rounded-full text-[8px]'>
+                            {favorites.length > 9 ? '9+' : favorites.length}
+                        </p>
+                    )}
+                </Link>
                 <div className='relative group'>
                     <Link to='/login'>
                         <img src={assets.profile_icon} className='w-5 cursor-pointer' alt="Your Profile" />
